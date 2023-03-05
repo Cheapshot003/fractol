@@ -1,5 +1,4 @@
 #include "../includes/fractol.h"
-#include <mlx.h>
 
 int	main(int argc, char **argv)
 {
