@@ -6,7 +6,7 @@
 /*   By: ole <ole@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:51:58 by ole               #+#    #+#             */
-/*   Updated: 2023/03/04 22:21:42 by ole              ###   ########.fr       */
+/*   Updated: 2023/03/09 20:37:52 by ole              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,9 @@ void    mandelbrot(t_data *data)
 {
     int x;
     int y;
-	double	zoom;
-    t_view  view;
+	int	iters;
 
-	zoom = 1.0;
-    view.xmax = 1.0 + (0.1 * data->movex) * zoom;
-    view.xmin = -2.0 + (0.1 * data->movex) * zoom;
-    view.ymax = 1.0 + (0.1 * data->movey) * zoom;
-    view.ymin = -1.0 + (0.1 * data->movey) * zoom;
-    
+	iters = 0;
     data->fractal = 1;
     x = 0;
     ft_putstr_fd("mandel\n", 1);
@@ -33,28 +27,59 @@ void    mandelbrot(t_data *data)
         y = 0;
         while (y <= SCREEN_Y)
         {
-            if (calc_mandelbrot(getX(x, view), getY(y, view)) < MAXITER)
-                put_pixel_img(data->screen->image, x, y, 0x00FF0000);
+			iters = calc_mandelbrot(getX(x, *data), getY(y, *data));
+            if (iters >= MAXITER)
+                put_pixel_img(data->screen.image, x, y, 0x00FF0000);
+			else
+				put_pixel_img(data->screen.image, x, y, getColor(iters));
             y++;
         }
         x++;
     }
-    mlx_put_image_to_window(data->screen->mlx, data->screen->mlx_win, data->screen->image->img, 0, 0);
-    ft_putchar_fd('5', 1);
-    mlx_loop(data->screen->mlx);
+    mlx_put_image_to_window(data->screen.mlx, data->screen.mlx_win, data->screen.image.img, 0, 0);
+    mlx_loop(data->screen.mlx);
     return ;
+}
+
+int	getColor(int iters)
+{
+	return (0xFF0000000 + iters * 10);
 }
 
 void julia(t_data *data)
 {
+	int	iters;
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	
     data->fractal = 2;
 
     ft_putstr_fd("julia\n", 1);
-    mlx_loop(data->screen->mlx);
+	while (x <= SCREEN_X)
+    {
+        y = 0;
+        while (y <= SCREEN_Y)
+        {
+			iters = calc_julia(data, getX(x, *data), getY(y, *data));
+            if (iters >= MAXITER)
+                put_pixel_img(data->screen.image, x, y, 0x00FF0000);
+			else
+				put_pixel_img(data->screen.image, x, y, getColor(iters));
+            y++;
+        }
+        x++;
+    }
+    mlx_put_image_to_window(data->screen.mlx, data->screen.mlx_win, data->screen.image.img, 0, 0);
+    mlx_loop(data->screen.mlx);
+	
+    mlx_loop(data->screen.mlx);
     return ;
 }
 
-double  getX(int x, t_view view)
+double  getX(int x, t_data view)
 {
     double x1;
 
@@ -62,7 +87,7 @@ double  getX(int x, t_view view)
     return (x1);
 }
 
-double  getY(int y, t_view view)
+double  getY(int y, t_data view)
 {
     double y1;
 

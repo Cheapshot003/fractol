@@ -6,7 +6,7 @@
 /*   By: ole <ole@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 14:23:27 by ole               #+#    #+#             */
-/*   Updated: 2023/03/04 22:02:22 by ole              ###   ########.fr       */
+/*   Updated: 2023/03/09 20:33:45 by ole              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,23 @@ int calc_mandelbrot(double x, double y)
     //ft_putstr_fd(ft_itoa(iterations), 1);
     //ft_putchar_fd('\n', 1);
     return iterations;
+}
+
+int	calc_julia(t_data	*data, double zr, double zi)
+{
+	int		n;
+	double	tmp;
+
+	n = 0;
+	while (n < MAXITER)
+	{
+		if ((zi * zi + zr * zr) > 4.0)
+			break ;
+		tmp = 2 * zr * zi + data->ki;
+		zr = zr * zr - zi * zi + data->kr;
+		zi = tmp;
+		n++;
+	}
+	return (n);
 }
 
