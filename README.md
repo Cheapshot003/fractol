@@ -1,6 +1,6 @@
-# 2D fractal renderer. Work in progress.
+# 2D fractal renderer. fractol project
 
-### This boi can render the mandelbrot set and the julia set.
+### *slaps computer* This boi can render sooo many fractals.
 ### Usage:
 - make
 - ./fractol \<fractal> \<parameters>
